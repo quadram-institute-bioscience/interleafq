@@ -47,7 +47,7 @@ if compared with popular Bash alternatives (like [this](https://gist.github.com/
 
 ## Bugs
 
-Please open an issue in GitHub [https://github.com/quadram-institute-bioscience/interleafq](https://github.com/quadram-institute-bioscience/interleafq).
+Please open an [issue](https://github.com/quadram-institute-bioscience/interleafq/issues).
 
 The software is not actively maintained, but being open source it's possible to contribute to it.
 
