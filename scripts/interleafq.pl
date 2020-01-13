@@ -11,7 +11,7 @@ use lib "$RealBin/lib";
 use FASTX::Reader;
 use Data::Dumper;
 
-my $VERSION = '0.99';
+my $VERSION = '0.90';
 my $AUTHOR  = 'Andrea Telatin';
 my $PROGRAM = basename($0);
 
