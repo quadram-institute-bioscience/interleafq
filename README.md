@@ -57,7 +57,7 @@ Andrea Telatin <andrea@telatin.com>
 Copyright (C) 2020 Andrea Telatin 
 
 This program is free software: you can redistribute it and/or modify
-it under the terms of the [LICENSE](MIT License).
+it under the terms of the [./LICENSE](MIT License).
 
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
