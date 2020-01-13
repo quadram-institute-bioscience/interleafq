@@ -185,7 +185,7 @@ if (defined $file1 and not defined $file2) {
 vprint("$c sequences parsed");
 sub version {
     # Display version if needed
-    say STDERR "$PROGRAM $VERSION ($AUTHOR)\n";
+    say STDERR "$PROGRAM $VERSION ($AUTHOR)";
     exit 0;
 }
  
