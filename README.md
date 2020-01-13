@@ -18,7 +18,7 @@ To deinterleave:
 **interleafq** can read FASTQ file, gzipped or not, and interleave or deinterleave them. 
 When receiving two files, it will _interleave_ them, if receiving a single file it will _deinterleave_ it. 
 It is designed to perform some internal checks to minimize the occurrences of malformed output, 
-if compared with popular Bash alternatives (like [https://gist.github.com/nathanhaigh/3521724](https://gist.github.com/nathanhaigh/3521724)).
+if compared with popular Bash alternatives (like [this](https://gist.github.com/nathanhaigh/3521724)).
 
 ## PARAMETERS
 
