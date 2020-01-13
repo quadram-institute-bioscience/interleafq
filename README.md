@@ -3,24 +3,25 @@
 ![InterleaFQ](img/interleafq_banner.png)
 
 
-## SYNOPSIS
+## Usage (short)
 
 To interleave
 
-    interleafq reads_R1.fq reads_R2.fq > reads_interleaved.fq
+    interleafq [options] reads_R1.fq reads_R2.fq > reads_interleaved.fq
 
 To deinterleave:
 
-    interleafq -o prefix reads_interleaved.fq 
+    interleafq [options] -o prefix reads_interleaved.fq 
+    interleafq [options] -1 file_R1.fq -2 file_R2.fq reads_interleaved.fq 
 
-## DESCRIPTION
+## Description
 
 **interleafq** can read FASTQ file, gzipped or not, and interleave or deinterleave them. 
 When receiving two files, it will _interleave_ them, if receiving a single file it will _deinterleave_ it. 
 It is designed to perform some internal checks to minimize the occurrences of malformed output, 
 if compared with popular Bash alternatives (like [this](https://gist.github.com/nathanhaigh/3521724)).
 
-## PARAMETERS
+## Parameters
 
 - **-o**, **--output-prefix** STRING
 
@@ -42,17 +43,17 @@ if compared with popular Bash alternatives (like [this](https://gist.github.com/
 
     Will **not** check for inconsistencies in read names and sequence/quality length. The read names should be equal until the first '/'.
 
-## BUGS
+## Bugs
 
 Please open an issue in GitHub [https://github.com/quadram-institute-bioscience/interleafq](https://github.com/quadram-institute-bioscience/interleafq).
 
 The software is not actively maintained, but being open source it's possible to contribute to it.
 
-## AUTHOR
+## Author
 
 Andrea Telatin <andrea@telatin.com>
 
-## COPYRIGHT
+## Copyright
 
 Copyright (C) 2020 Andrea Telatin 
 
