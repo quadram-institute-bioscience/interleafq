@@ -11,7 +11,7 @@ use lib "$RealBin/lib";
 use FASTX::Reader;
 use Data::Dumper;
 
-my $VERSION = '0.90';
+my $VERSION = '0.92';
 my $AUTHOR  = 'Andrea Telatin';
 my $PROGRAM = basename($0);
 
@@ -140,6 +140,7 @@ vprint("$c sequences parsed");
 sub version {
     # Display version if needed
     say STDERR "$PROGRAM $VERSION ($AUTHOR)\n";
+    exit 0;
 }
  
 sub usage {
