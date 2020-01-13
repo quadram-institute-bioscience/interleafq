@@ -11,13 +11,14 @@ my %commands = (
     qq(perl $script -o "$data_dir/T_" "$data_dir/interleaved_suffix.fq")  => 0,
     qq(perl $script -1 "$data_dir/T_1.fq" -2 "$data_dir/T_2.fq"  "$data_dir/interleaved_suffix.fq")  => 0,
     qq(perl $script -o "$data_dir/T_" "$data_dir/interleaved_suffix.fq.gz")  => 0,
+    qq(perl $script -o "$data_dir/T_" "$data_dir/interleaved_quality_error.fq")  => 0, # Error is tolerated but output will be truncated
     # Deinterleave: KO    
     qq(perl $script -1 "$data_dir/T_1.fq" -1 "$data_dir/T_2.fq"  "$data_dir/interleaved_suffix.fq")  => 1,# Same parameter provided
     qq(perl $script -1 "$data_dir/T_1.fq" -1 "$data_dir/T_1.fq"  "$data_dir/interleaved_suffix.fq")  => 1,# Same output file provided
     qq(perl $script "$data_dir/non_existing_file.fq")  => 1,
-    qq(perl $script "$data_dir/interleaved_quality_error.fq")  => 1,
-    qq(perl $script "$data_dir/interleaved_error.fq")  => 1,
-    qq(perl $script   "$data_dir/phi_reads_R1.fq.gz") => 1,
+    
+    qq(perl $script -o "$data_dir/T_" "$data_dir/interleaved_error.fq")  => 1, #
+    qq(perl $script "$data_dir/phi_reads_R1.fq.gz") => 1, # missing output parameters
 
     # Interleve: OK
     qq(perl $script   "$data_dir/phi_reads_R1.fq.gz" "$data_dir/phi_reads_R2.fq.gz")  => 0,
@@ -43,3 +44,5 @@ for my $command (sort { $commands{$a} <=> $commands{$b} } keys %commands) {
         die "! $c FAILED: Expected failure but returned 0\n";
     }
 }
+
+say 'OK';

@@ -9,6 +9,7 @@ use File::Basename;
 use FindBin qw($RealBin);
 use lib "$RealBin/lib";
 use FASTX::Reader;
+use Data::Dumper;
 
 my $VERSION = '1.0';
 my $AUTHOR  = 'Andrea Telatin';
@@ -58,6 +59,7 @@ if (defined $file1 and not defined $file2) {
 
     my $FQ = FASTX::Reader->new({ filename => "$file1" });
     while (my $R1 = $FQ->getFastqRead() ) {
+        say Dumper $FQ;
         my $R2 = $FQ->getFastqRead() || die "Missing R2 read: expecting even sequences\n";
         $c++;
         if (not defined $opt_dont_check) {

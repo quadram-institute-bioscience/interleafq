@@ -31,5 +31,5 @@ test:
 about:
   home: https://github.com/quadram-institute-bioscience/interleafq/
   license: MIT
-  summary: A tool to interleave and deinterleave FASTQ files with controls and support for gzipped input
-
+  summary: Interleave and deinterleave FASTQ files 
+  description: A tool to interleave and deinterleave FASTQ files, with consistency controls and support for gzipped input
