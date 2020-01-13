@@ -71,7 +71,10 @@ if (defined $file1 and not defined $file2) {
 
         my $c1 = '';
         my $c2 = '';
-
+        if (not defined $opt_strip_comments) {
+            $c1 = ' ' . $R1->{comment} if (defined $R1->{comment});
+            $c2 = ' ' . $R2->{comment} if (defined $R2->{comment});;
+        }
 
         print {$O1} '@', $R1->{name}, $c1, "\n",
             $R1->{seq}, "\n+\n",
@@ -109,8 +112,13 @@ if (defined $file1 and not defined $file2) {
             die " FATAL ERROR:\n Quality/Sequence length mismatch at read R2 $c ($R2->{name})\n"
                 if (length($R2->{seq}) ne length($R2->{qual}));
         }
+
         my $c1 = '';
         my $c2 = '';
+        if (not defined $opt_strip_comments) {
+            $c1 = ' ' . $R1->{comment} if (defined $R1->{comment});
+            $c2 = ' ' . $R2->{comment} if (defined $R2->{comment});;
+        }
         print '@', $R1->{name}, $c1, "\n",
             $R1->{seq}, "\n+\n", $R1->{qual} , "\n",
             '@', $R2->{name}, $c2, "\n",
@@ -120,6 +128,8 @@ if (defined $file1 and not defined $file2) {
    pod2usage({-exitval => 0, -verbose => 2}) if $opt_help;
     die usage() unless ($file1); 
 }
+
+vprint("$c sequences parsed");
 sub version {
     # Display version if needed
     die "$PROGRAM $VERSION ($AUTHOR)\n";
