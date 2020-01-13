@@ -1,5 +1,7 @@
 # interleafq
 
+[![Build Status](https://travis-ci.org/quadram-institute-bioscience/interleafq.svg?branch=master)](https://travis-ci.org/quadram-institute-bioscience/interleafq)
+
 ![InterleaFQ](img/interleafq_banner.png)
 
 
