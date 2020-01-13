@@ -11,7 +11,7 @@ use lib "$RealBin/lib";
 use FASTX::Reader;
 use Data::Dumper;
 
-my $VERSION = '1.0';
+my $VERSION = '0.99';
 my $AUTHOR  = 'Andrea Telatin';
 my $PROGRAM = basename($0);
 
@@ -139,7 +139,7 @@ if (defined $file1 and not defined $file2) {
 vprint("$c sequences parsed");
 sub version {
     # Display version if needed
-    die "$PROGRAM $VERSION ($AUTHOR)\n";
+    say STDERR "$PROGRAM $VERSION ($AUTHOR)\n";
 }
  
 sub usage {
