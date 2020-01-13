@@ -46,7 +46,12 @@ if (defined $file1 and not defined $file2) {
         die " FATAL ERROR:\n When deinterleaving, specify either [-o] or [-1 and -2]. See --help.\n";
     } elsif (defined $opt_out1 and ($opt_out1 eq $opt_out2)) {
         die " FATAL ERROR:\n Same output specified for -1 and -2.";
+    } elsif (defined $opt_outbase) {
+        $opt_out1 = "${opt_outbase}_R1.fastq";
+        $opt_out2 = "${opt_outbase}_R2.fastq";
     }
+
+
 
     open (my $O1, '>', "$opt_out1") || die " FATAL ERROR:\n Unable to write R1 to <$opt_out1>.\n";
     open (my $O2, '>', "$opt_out2") || die " FATAL ERROR:\n Unable to write R2 to <$opt_out2>.\n";
