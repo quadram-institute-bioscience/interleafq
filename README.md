@@ -27,15 +27,17 @@ if compared with popular Bash alternatives (like [this](https://gist.github.com/
 
 - **-o**, **--output-prefix** STRING
 
-    Basename for the output file when deinterleaving. Will produce by default `{prefix}_R1.fastq` and `{prefix}_R2.fastq`.
+    Basename for the output file when deinterleaving. Will produce by default `{prefix}_R1.fastq` and `{prefix}_R2.fastq`. 
 
 - **-1**, **--first-pair** FILE
 
-    Filename for the first pair produced when deinterleaving. Alternative to `-o`.
+    Filename for the first pair produced when deinterleaving. 
+    Alternative to `-o`. If the filename ends by `.gz`, the file will be saved compressed.
 
 - **-2**, **--second-pair** FILE
 
-    Filename for the second pair produced when deinterleaving. Alternative to `-o`.
+    Filename for the second pair produced when deinterleaving. 
+    Alternative to `-o`. If the filename ends by `.gz`, the file will be saved compressed.
 
 - **-s**, **--strip-comments**
 
@@ -44,6 +46,27 @@ if compared with popular Bash alternatives (like [this](https://gist.github.com/
 - **-r**, **--relaxed**
 
     Will **not** check for inconsistencies in read names and sequence/quality length. The read names should be equal until the first '/'.
+    
+- **-z**, **--gzip-output**
+
+    Will save deinterleaved files compressed (adding .gz to the filename). To be used with `-o`.
+   
+- **-i**, **--force-interleave**
+
+    When supplying only one filename, will try to guess the name of the second paired-end replacing `_R1` with `_R2`.
+ 
+- **-v**, **--verbose**
+
+    Enable verbose output, will print number of printed sequences at the end (can be less than total if there are errors).
+    
+- **-h**, **--help**
+
+    Display manual page
+    
+- **--version**
+
+    Display version number and exit
+
 
 ## Bugs
 
