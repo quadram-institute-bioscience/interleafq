@@ -9,25 +9,27 @@ use File::Basename;
 use FindBin qw($RealBin);
 use lib "$RealBin/lib";
 use FASTX::Reader;
-use Data::Dumper;
+use IO::Compress::Gzip qw(gzip $GzipError);
 
-my $VERSION = '0.92';
+my $VERSION = '0.98';
 my $AUTHOR  = 'Andrea Telatin';
 my $PROGRAM = basename($0);
 
-my ($opt_help, $opt_version, $opt_verbose, $opt_dont_check, $opt_strip_comments);
+my ($opt_help, $opt_version, $opt_verbose, $opt_dont_check, $opt_strip_comments, $opt_force_interleave, $opt_gzip);
 my ($opt_outbase, $opt_out1, $opt_out2);
 
 
 my $_opt = GetOptions(
     'h|help'                => \$opt_help,
     'version'               => \$opt_version,
+    'i|force-interleave'    => \$opt_force_interleave,
     'v|verbose'             => \$opt_verbose,
     'o|output-basename=s'   => \$opt_outbase,
     '1|first-pair=s'        => \$opt_out1,
     '2|second-pair=s'       => \$opt_out2,
     'r|relaxed'             => \$opt_dont_check,
     's|strip-comments'      => \$opt_strip_comments,
+    'z|gzip-output'         => \$opt_gzip,
 );
 
 sub vprint($);
@@ -35,6 +37,19 @@ my ($file1, $file2) = @ARGV;
 
 $opt_version && version();
 
+if ($opt_force_interleave and defined $file1) {
+    $file2 = $file1;
+    $file2 =~s/_R1/_R2/;
+    if ($file1 eq $file2) {
+        $file2 =~s/_1\./_2\./;
+    }
+    if ($file1 eq $file2) {
+        die " FATAL ERROR:\n Unable to identify second pair-end file for <$file1>.\n";
+    } else {
+        vprint("Force interleave: assuming R2 is <$file2>.");
+    }
+       
+}
 
 
 my $c = 0;
@@ -50,16 +65,34 @@ if (defined $file1 and not defined $file2) {
     } elsif (defined $opt_outbase) {
         $opt_out1 = "${opt_outbase}_R1.fastq";
         $opt_out2 = "${opt_outbase}_R2.fastq";
+        if ($opt_gzip) {
+            $opt_out1 .= '.gz';
+            $opt_out2 .= '.gz';
+        }
+        vprint("Output files: $opt_out1, $opt_out2");
     }
 
 
+    if ($opt_out1 =~/\.gz$/ or $opt_out2 =~/\.gz$/) {
+        if ($opt_out1 =~/\.gz$/ and $opt_out2 =~/\.gz$/) {
+            $opt_gzip = 1;
+        } else {
+            die "FATAL ERROR:\n Please request gzipped output for BOTH files: $opt_out1, $opt_out2\n";
+        }
+    }
 
-    open (my $O1, '>', "$opt_out1") || die " FATAL ERROR:\n Unable to write R1 to <$opt_out1>.\n";
-    open (my $O2, '>', "$opt_out2") || die " FATAL ERROR:\n Unable to write R2 to <$opt_out2>.\n";
+    my ($O1, $O2);
+
+    if ($opt_gzip) {
+        $O1 = new IO::Compress::Gzip "$opt_out1" or die "FATAL ERROR:\ngzip failed for $opt_out1: $GzipError\n";
+        $O2 = new IO::Compress::Gzip "$opt_out2" or die "FATAL ERROR:\ngzip failed for $opt_out2: $GzipError\n";
+    } else {
+        open ($O1, '>', "$opt_out1") || die " FATAL ERROR:\n Unable to write R1 to <$opt_out1>.\n";
+        open ($O2, '>', "$opt_out2") || die " FATAL ERROR:\n Unable to write R2 to <$opt_out2>.\n";
+    }
 
     my $FQ = FASTX::Reader->new({ filename => "$file1" });
     while (my $R1 = $FQ->getFastqRead() ) {
-        say Dumper $FQ;
         my $R2 = $FQ->getFastqRead() || die "Missing R2 read: expecting even sequences\n";
         $c++;
         if (not defined $opt_dont_check) {
@@ -92,10 +125,21 @@ if (defined $file1 and not defined $file2) {
             $R2->{qual},"\n";
     }
 
+    if ($opt_gzip) {
+        $O1->close();
+        $O2->close();
+    }
+
 
     
 } elsif (defined $file2) {
     #interleave
+
+    if ($opt_gzip) {
+        say STDERR "WARNING: -z is unsupported while interleaving (pipe to gzip -c)";
+        $opt_gzip = 0;
+    }
+
     if (not -e "$file1") {
         die " FATAL ERROR:\n R1 file <$file1> was not found.\n";
     }
@@ -105,6 +149,7 @@ if (defined $file1 and not defined $file2) {
     my $F1 = FASTX::Reader->new({ filename => "$file1" });
     my $F2 = FASTX::Reader->new({ filename => "$file2" });
 
+ 
     while (my $R1 = $F1->getFastqRead() ) {
         my $R2 = $F2->getFastqRead() || die "FATAL ERROR:\n Second file ended unexpectedly at $c reads\n";
         $c++;
@@ -126,6 +171,7 @@ if (defined $file1 and not defined $file2) {
             $c1 = ' ' . $R1->{comment} if (defined $R1->{comment});
             $c2 = ' ' . $R2->{comment} if (defined $R2->{comment});;
         }
+
         print '@', $R1->{name}, $c1, "\n",
             $R1->{seq}, "\n+\n", $R1->{qual} , "\n",
             '@', $R2->{name}, $c2, "\n",
@@ -185,18 +231,20 @@ It is designed to perform some internal checks to minimize the occurrences of ma
 =head1 PARAMETERS
 
 =over 4
-
+ 
 =item B<-o>, B<--output-prefix> STRING
  
 Basename for the output file when deinterleaving. Will produce by default C<{prefix}_R1.fastq> and C<{prefix}_R2.fastq>.
 
 =item B<-1>, B<--first-pair> FILE
 
-Filename for the first pair produced when deinterleaving. Alternative to C<-o>.
+Filename for the first pair produced when deinterleaving. 
+Alternative to C<-o>, if the specified output filename ends with '.gz' will print a compressed file.
 
 =item B<-2>, B<--second-pair> FILE
 
-Filename for the second pair produced when deinterleaving. Alternative to C<-o>.
+Filename for the second pair produced when deinterleaving. 
+Alternative to C<-o>, if the specified output filename ends with '.gz' will print a compressed file.
 
 =item B<-s>, B<--strip-comments>
 
@@ -205,6 +253,23 @@ Will remove comments from the sequence headers (I<i. e.> any string after the fi
 =item B<-r>, B<--relaxed>
 
 Will B<not> check for inconsistencies in read names and sequence/quality length. The read names should be equal until the first '/'.
+
+=item B<-i>, B<--force-interleave>
+
+When supplying only the first pair-end file it will set interleave mode, looking for a second pair-end file (replacing _R1 with _R2)
+
+=item B<--version>
+
+Display version number and exit.
+
+=item B<-v>, B<--verbose>
+
+Display additional information (total printed sequences at the end, useful for truncated files).
+
+=item B<-h>, B<--help>
+
+Display this help message.
+
 
 =back 
 
