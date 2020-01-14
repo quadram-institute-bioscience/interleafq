@@ -1,12 +1,12 @@
 # interleafq
 
-Interleave and deinterleave FASTQ files, supporting gzipped input (and output, when deinterleaving)
-
 [![Build Status](https://travis-ci.org/quadram-institute-bioscience/interleafq.svg?branch=master)](https://travis-ci.org/quadram-institute-bioscience/interleafq)
 [![Install with Conda](https://anaconda.org/bioconda/interleafq/badges/installer/conda.svg)](https://anaconda.org/bioconda/interleafq)
 ![Conda version](https://anaconda.org/bioconda/interleafq/badges/version.svg)
 
 ![InterleaFQ](img/interleafq_banner.png)
+
+Interleave and deinterleave FASTQ files, supporting gzipped input (and output, when deinterleaving)
 
 
 ## Usage (short)
