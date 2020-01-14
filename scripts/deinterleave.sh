@@ -29,5 +29,3 @@ else
   paste - - - - - - - -  | tee >(cut -f 1-4 | tr "\t" "\n" | pigz --best --processes ${PIGZ_COMPRESSION_THREADS} > $1) | cut -f 5-8 | tr "\t" "\n" | pigz --best --processes 
 ${PIGZ_COMPRESSION_THREADS} > $2
 fi
-@nathanhaigh
-
