@@ -1,5 +1,7 @@
 # interleafq
 
+Interleave and deinterleave FASTQ files, supporting gzipped input (and output, when deinterleaving)
+
 [![Build Status](https://travis-ci.org/quadram-institute-bioscience/interleafq.svg?branch=master)](https://travis-ci.org/quadram-institute-bioscience/interleafq)
 [![Install with Conda](https://anaconda.org/bioconda/interleafq/badges/installer/conda.svg)](https://anaconda.org/bioconda/interleafq)
 ![Conda version](https://anaconda.org/bioconda/interleafq/badges/version.svg)
@@ -9,11 +11,11 @@
 
 ## Usage (short)
 
-To interleave
+To interleave (2 input files):
 
     interleafq [options] reads_R1.fq reads_R2.fq > reads_interleaved.fq
 
-To deinterleave:
+To deinterleave (1 input file):
 
     interleafq [options] -o prefix reads_interleaved.fq 
     interleafq [options] -1 file_R1.fq -2 file_R2.fq reads_interleaved.fq 
