@@ -9,9 +9,10 @@ use File::Basename;
 use FindBin qw($RealBin);
 use lib "$RealBin/lib";
 use FASTX::Reader;
+use Term::ANSIColor qw(:constants);
 use IO::Compress::Gzip qw(gzip $GzipError);
 
-my $VERSION = '0.98';
+my $VERSION = '1.1.0';
 my $AUTHOR  = 'Andrea Telatin';
 my $PROGRAM = basename($0);
 
@@ -48,7 +49,7 @@ if ($opt_force_interleave and defined $file1) {
     } else {
         vprint("Force interleave: assuming R2 is <$file2>.");
     }
-       
+
 }
 
 
@@ -107,7 +108,7 @@ if (defined $file1 and not defined $file2) {
             die " FATAL ERROR:\n Quality/Sequence length mismatch at read R2 $c ($R2->{name})\n"
                 if (length($R2->{seq}) ne length($R2->{qual}));
         }
-        
+
 
         my $c1 = '';
         my $c2 = '';
@@ -131,7 +132,7 @@ if (defined $file1 and not defined $file2) {
     }
 
 
-    
+
 } elsif (defined $file2) {
     #interleave
 
@@ -149,7 +150,7 @@ if (defined $file1 and not defined $file2) {
     my $F1 = FASTX::Reader->new({ filename => "$file1" });
     my $F2 = FASTX::Reader->new({ filename => "$file2" });
 
- 
+
     while (my $R1 = $F1->getFastqRead() ) {
         my $R2 = $F2->getFastqRead() || die "FATAL ERROR:\n Second file ended unexpectedly at $c reads\n";
         $c++;
@@ -179,19 +180,21 @@ if (defined $file1 and not defined $file2) {
     }
 } else {
    pod2usage({-exitval => 0, -verbose => 2}) if $opt_help;
-    die usage() unless ($file1); 
+    die usage() unless ($file1);
 }
 
 vprint("$c sequences parsed");
 sub version {
     # Display version if needed
-    say STDERR "$PROGRAM $VERSION ($AUTHOR)";
+    say STDERR BOLD, $PROGRAM, RESET, " $VERSION ($AUTHOR)";
+    say STDERR GREEN, "[using FASTX::Reader ", $FASTX::Reader::VERSION ,"]", RESET;
     exit 0;
 }
- 
+
 sub usage {
     # Short usage string in case of errors
-    die "USAGE
+    die
+"USAGE
 To interleave:
   $PROGRAM file_R1.fq file_R2.fq > interleaved_file.fq
 
@@ -206,44 +209,44 @@ sub vprint($) {
     say STDERR "$_[0]";
 }
 __END__
- 
+
 =head1 NAME
- 
+
 B<interleafq> - interleave and deinterleave FASTQ paired reads.
- 
+
 =head1 SYNOPSIS
- 
+
 To interleave
 
   interleafq reads_R1.fq reads_R2.fq > reads_interleaved.fq
 
 To deinterleave:
 
-  interleafq -o prefix reads_interleaved.fq 
+  interleafq -o prefix reads_interleaved.fq
 
 =head1 DESCRIPTION
- 
-B<interleafq> can read FASTQ file, gzipped or not, and interleave or deinterleave them. 
-When receiving two files, it will I<interleave> them, if receiving a single file it will I<deinterleave> it. 
-It is designed to perform some internal checks to minimize the occurrences of malformed output, if compared with popular Bash alternatives 
+
+B<interleafq> can read FASTQ file, gzipped or not, and interleave or deinterleave them.
+When receiving two files, it will I<interleave> them, if receiving a single file it will I<deinterleave> it.
+It is designed to perform some internal checks to minimize the occurrences of malformed output, if compared with popular Bash alternatives
 (like L<https://gist.github.com/nathanhaigh/3521724>).
 
 =head1 PARAMETERS
 
 =over 4
- 
+
 =item B<-o>, B<--output-prefix> STRING
- 
+
 Basename for the output file when deinterleaving. Will produce by default C<{prefix}_R1.fastq> and C<{prefix}_R2.fastq>.
 
 =item B<-1>, B<--first-pair> FILE
 
-Filename for the first pair produced when deinterleaving. 
+Filename for the first pair produced when deinterleaving.
 Alternative to C<-o>, if the specified output filename ends with '.gz' will print a compressed file.
 
 =item B<-2>, B<--second-pair> FILE
 
-Filename for the second pair produced when deinterleaving. 
+Filename for the second pair produced when deinterleaving.
 Alternative to C<-o>, if the specified output filename ends with '.gz' will print a compressed file.
 
 =item B<-s>, B<--strip-comments>
@@ -271,33 +274,33 @@ Display additional information (total printed sequences at the end, useful for t
 Display this help message.
 
 
-=back 
+=back
 
 =head1 BUGS
- 
+
 Please open an issue in GitHub L<https://github.com/quadram-institute-bioscience/interleafq>.
 
 The software is not actively maintained, but being open source it's possible to contribute to it.
- 
+
 =head1 AUTHOR
- 
+
 Andrea Telatin <andrea@telatin.com>
- 
+
 =head1 COPYRIGHT
- 
-Copyright (C) 2020 Andrea Telatin 
- 
+
+Copyright (C) 2020 Andrea Telatin
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
- 
+
 This program is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
- 
+
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
- 
+
 =cut
