@@ -27,12 +27,6 @@ When receiving two files, it will _interleave_ them, if receiving a single file 
 It is designed to perform some internal checks to minimize the occurrences of malformed output, 
 if compared with popular Bash alternatives (like [this](https://gist.github.com/nathanhaigh/3521724)).
 
-The performance is also better than the Bash script (see `test/bench.pl`):
-```
-     s/iter bash perl
-bash   28.6   -- -82%
-perl   5.23 447%   --
-```
 
 ## Parameters
 
