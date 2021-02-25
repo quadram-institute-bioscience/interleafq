@@ -8,6 +8,9 @@
 
 Interleave and deinterleave FASTQ files, supporting gzipped input (and output, when deinterleaving)
 
+## :warning: No longer maintained
+
+The _interleave_ and _deinterleave_ functions are now embedded in **[SeqFu](https://github.com/telatin/seqfu2)**
 
 ## Usage (short)
 
